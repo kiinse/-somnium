@@ -1,24 +1,19 @@
-![Harbor 1.6 banner](https://i.imgur.com/VsYoStK.png)
+# 🛏️ Somnium
+[![License](https://img.shields.io/badge/license-MIT-brightgreen.svg)](https://github.com/kiinse/somnium/blob/master/LICENSE)
+![GitHub release (latest by date including pre-releases)](https://img.shields.io/github/v/release/kiinse/somnium?include_prereleases&style=flat-square)
+[![GitHub issues](https://img.shields.io/github/issueskiinse/somnium?style=flat-square)](https://github.com/kiinse/somnium/issues)
+![GitHub last commit](https://img.shields.io/github/last-commit/kiinse/somnium?style=flat-square)
+![GitHub all releases](https://img.shields.io/github/downloads/kiinse/somnium/total?style=flat-square)
+[![GitHub forks](https://img.shields.io/github/forks/kiinse/somnium?style=flat-square)](https://github.com/kiinse/somnium/network)
+[![GitHub stars](https://img.shields.io/github/stars/kiinse/somnium?style=flat-square)](https://github.com/kiinse/somnium/stargazers)
+![GitHub repo size](https://img.shields.io/github/repo-size/kiinse/somnium?style=flat-square)
 
-[discord-invite]: https://discord.gg/UACRzwe
-# ⚓ Harbor 
-[![CodeFactor](https://www.codefactor.io/repository/github/nkomarn/harbor/badge)](https://www.codefactor.io/repository/github/nkomarn/harbor) [![License](https://img.shields.io/badge/license-MIT-brightgreen.svg)](https://github.com/nkomarn/Harbor/blob/master/LICENSE) [![Discord](https://discordapp.com/api/guilds/285623631042707457/widget.png)][discord-invite]
+Somnium is a lightweight plugin that allows you to skip the night on Minecraft game servers with PaperMC core.
+This plugin is based on the "Harbour" plugin code from the developer "nkomarn".
 
-Harbor is a plugin that redefines sleep within your Spigot server! Harbor is lightweight and performant, with just the right amount of features for any survival server! 
-
-Check it out and download the latest builds [over on the releases page!](https://github.com/nkomarn/Harbor/releases)
-
-# 🔨 Building from source
-Harbor uses Maven to handle dependecies and building! Make sure you have Java 8, Git, and Maven installed, and then run:
-```
-git clone https://github.com/nkomarn/Harbor.git
-cd Harbor/
-mvn package
-```
-You can find the compiled JARs in the `target` directory.
-
-# 🎺 Contributing
-Feel free to create pull requests with any changes or improvements that think would make Harbor a better plugin! Generally, try to keep core plugin features intact. Pull requests with bugfixes are welcome!
+Check it out and download the latest builds [over on the releases page!](https://github.com/kiinse/somnium/releases)
 
 # 📋 License
-Harbor is licensed under the MIT license. View `LICENSE` for more information.
+Somnium is licensed under the MIT license. View `LICENSE` for more information.
+
+[discord-invite]: https://discord.gg/UACRzwe

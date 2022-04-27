@@ -1,6 +1,5 @@
 # 🛏️ Somnium
 [![License](https://img.shields.io/badge/license-MIT-brightgreen.svg)](https://github.com/kiinse/somnium/blob/master/LICENSE)
-![GitHub tag](https://img.shields.io/github/v/tag/kiinse/somnium?style=flat-square)
 [![GitHub issues](https://img.shields.io/github/issues/kiinse/somnium?style=flat-square)](https://github.com/kiinse/somnium/issues)
 ![GitHub last commit](https://img.shields.io/github/last-commit/kiinse/somnium?style=flat-square)
 

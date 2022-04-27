@@ -1,5 +1,8 @@
-package xyz.nkomarn.harbor.listener;
+package kiinse.plugin.somnium.listener;
 
+import kiinse.plugin.somnium.Somnium;
+import kiinse.plugin.somnium.task.Checker;
+import kiinse.plugin.somnium.util.PlayerManager;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -8,24 +11,17 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerBedEnterEvent;
 import org.bukkit.event.player.PlayerBedLeaveEvent;
 import org.jetbrains.annotations.NotNull;
-import xyz.nkomarn.harbor.Harbor;
-import xyz.nkomarn.harbor.task.Checker;
-import xyz.nkomarn.harbor.util.Messages;
-import xyz.nkomarn.harbor.util.PlayerManager;
-
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 
 public class BedListener implements Listener {
 
-    private final Harbor harbor;
-    private final Messages messages;
+    private final Somnium somnium;
     private final PlayerManager playerManager;
 
-    public BedListener(@NotNull Harbor harbor) {
-        this.harbor = harbor;
-        this.messages = harbor.getMessages();
-        this.playerManager = harbor.getPlayerManager();
+    public BedListener(@NotNull Somnium somnium) {
+        this.somnium = somnium;
+        this.playerManager = somnium.getPlayerManager();
     }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
@@ -39,11 +35,9 @@ public class BedListener implements Listener {
             return;
         }
 
-        Bukkit.getScheduler().runTaskLater(harbor, () -> {
+        Bukkit.getScheduler().runTaskLater(somnium, () -> {
             playerManager.setCooldown(player, Instant.now());
-            harbor.getMessages().sendWorldChatMessage(event.getBed().getWorld(), messages.prepareMessage(
-                    player, harbor.getConfiguration().getString("messages.chat.player-sleeping"))
-            );
+            somnium.getMessages().sendWorldChatMessage(event.getBed().getWorld(), player, "playerSleeping");
         }, 1);
     }
 
@@ -53,22 +47,14 @@ public class BedListener implements Listener {
             return;
         }
 
-        Bukkit.getScheduler().runTaskLater(harbor, () -> {
+        Bukkit.getScheduler().runTaskLater(somnium, () -> {
             playerManager.setCooldown(event.getPlayer(), Instant.now());
-            harbor.getMessages().sendWorldChatMessage(event.getBed().getWorld(), messages.prepareMessage(
-                    event.getPlayer(), harbor.getConfiguration().getString("messages.chat.player-left-bed"))
-            );
+            somnium.getMessages().sendWorldChatMessage(event.getBed().getWorld(), event.getPlayer(), "playerLeftBed");
         }, 1);
     }
 
-    /**
-     * Checks if a message should be silenced from chat (i.e. if the player is under cooldown).
-     *
-     * @param player The player context.
-     * @return Whether the message should be silenced.
-     */
     private boolean isMessageSilenced(@NotNull Player player) {
-        if (harbor.getChecker().isSkipping(player.getWorld())) {
+        if (somnium.getChecker().isSkipping(player.getWorld())) {
             return true;
         }
 
@@ -76,7 +62,7 @@ public class BedListener implements Listener {
             return true;
         }
 
-        int cooldown = harbor.getConfiguration().getInteger("messages.chat.message-cooldown");
+        int cooldown = somnium.getConfiguration().getInteger("messages.chat.message-cooldown");
         return playerManager.getCooldown(player).until(Instant.now(), ChronoUnit.MINUTES) < cooldown;
     }
 }

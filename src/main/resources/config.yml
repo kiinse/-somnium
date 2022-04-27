@@ -1,10 +1,5 @@
 # Harbor - Sleep mechanics enhancement plugin
 # An open-source project by TechToolbox (@nkomarn)
-# https://github.com/nkomarn/Harbor
-
-# Important note regarding Essentials:
-# Please make sure you negate the permission "essentials.sleepingignored" to
-# prevent issues with Harbor and server operators when running Essentials.
 
 night-skip:
   enabled: true # Skip the night if a percentage of the players in a world are sleeping
@@ -30,8 +25,6 @@ exclusions:
 # Essentials API is used for AFK detection when available- otherwise a fallback system is used
 afk-detection:
   fallback-enabled: true
-  essentials-enabled: true
-  essentials-detection-mode: and # Plugins providing an AFK status, such as Essentials, can either have that AFK check ANDed or ORed with other plugin's checks. By default, we use ANDed detection (Essentials AND any other plugins must report the player as AFK)
   fallback-timeout: 15 # Time in minutes until a player is considered AFK
 
 # Blacklist for worlds- Harbor will ignore these worlds
@@ -44,34 +37,27 @@ messages:
   chat:
     enabled: true
     message-cooldown: 5 # The amount of time in seconds before a player can send another bed enter or leave message
-    player-sleeping: "&e[player] is now sleeping ([sleeping]/[needed], [more] more needed to skip)."
-    player-left-bed: "&e[player] got out of bed ([sleeping]/[needed], [more] more needed to skip)."
     night-skipping:
-      - "&eAccelerating the night."
-      - "&eRapidly approaching daytime."
+      - "skipping1"
+      - "skipping2"
     night-skipped:
-      - "&eThe night has been skipped."
-      - "&eAhhh, finally morning."
-      - "&eArghh, it's so bright outside."
-      - "&eRise and shine."
+      - "skipped1"
+      - "skipped2"
+      - "skipped3"
+      - "skipped4"
+    #Edit in messages.json
   actionbar:
-    enabled: true
-    players-sleeping: "&e[sleeping] out of [needed] players are sleeping ([more] more needed to skip)"
-    night-skipping: "&eEveryone is sleeping- sweet dreams!"
+    enabled: false
   bossbar:
     enabled: true
     players-sleeping:
-      message: "&f&l[sleeping] out of [needed] are sleeping &7&l([more] more needed)"
+      message: "{SLEEPING} out of {NEEDED} are sleeping &7&l({MORE} more needed)"
       color: BLUE
     night-skipping:
-      message: "&f&lEveryone is sleeping. Sweet dreams!"
+      message: "Everyone is sleeping. Sweet dreams!"
       color: GREEN
-  miscellaneous:
-    chat-prefix: "&8&l(&6&lHarbor&8&l)&f "
-    unrecognized-command: "Unrecognized command."
 
 # Spooky internal controls
 version: 1.6.4
 interval: 1
-metrics: true
 debug: false

@@ -1,5 +1,6 @@
-package xyz.nkomarn.harbor.listener;
+package kiinse.plugin.somnium.listener;
 
+import kiinse.plugin.somnium.Somnium;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -13,8 +14,7 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.jetbrains.annotations.NotNull;
-import xyz.nkomarn.harbor.Harbor;
-import xyz.nkomarn.harbor.provider.DefaultAFKProvider;
+import kiinse.plugin.somnium.provider.DefaultAFKProvider;
 
 import java.util.ArrayDeque;
 import java.util.Queue;
@@ -25,53 +25,39 @@ public final class AfkListener implements Listener {
     private final DefaultAFKProvider afkProvider;
     private Queue<AfkPlayer> players;
     private PlayerMovementChecker movementChecker;
-    private final Harbor harbor;
+    private final Somnium somnium;
     private boolean status;
 
     public AfkListener(@NotNull DefaultAFKProvider afkProvider) {
         this.afkProvider = afkProvider;
-        this.harbor = afkProvider.getHarbor();
-        harbor.getLogger().info("Initializing fallback AFK detection system. Fallback AFK system is not enabled at this time");
+        this.somnium = afkProvider.getSomnium();
+        somnium.getLogger().info("Initializing fallback AFK detection system. Fallback AFK system is not enabled at this time");
         status = false;
     }
 
-    /**
-     * Provides a way to start the listener
-     */
     public void start() {
         if(!status) {
             status = true;
             players = new ArrayDeque<>();
             movementChecker = new PlayerMovementChecker();
-
-            // Populate the queue with any existing players
             players.addAll(Bukkit.getOnlinePlayers().stream().map((Function<Player, AfkPlayer>) AfkPlayer::new).collect(Collectors.toSet()));
-
-            // Register listeners after populating the queue
-            Bukkit.getServer().getPluginManager().registerEvents(this, harbor);
-
-            // We want every player to get a check every 20 ticks. The runnable smooths out checking a certain
-            // percentage of players over all 20 ticks. Thusly, the runnable must run on every tick
-            movementChecker.runTaskTimer(harbor, 0, 1);
-
-            harbor.getLogger().info("Fallback AFK detection system is enabled");
+            Bukkit.getServer().getPluginManager().registerEvents(this, somnium);
+            movementChecker.runTaskTimer(somnium, 0, 1);
+            somnium.getLogger().info("Fallback AFK detection system is enabled");
         } else {
-            harbor.getLogger().info("Fallback AFK detection system was already enabled");
+            somnium.getLogger().info("Fallback AFK detection system was already enabled");
         }
     }
 
-    /**
-     * Provides a way to halt the listener
-     */
     public void stop() {
         if(status) {
             status = false;
             movementChecker.cancel();
             HandlerList.unregisterAll(this);
             players = null;
-            harbor.getLogger().info("Fallback AFK detection system is disabled");
+            somnium.getLogger().info("Fallback AFK detection system is disabled");
         } else {
-            harbor.getLogger().info("Fallback AFK detection system was already disabled");
+            somnium.getLogger().info("Fallback AFK detection system was already disabled");
         }
     }
 
@@ -102,9 +88,6 @@ public final class AfkListener implements Listener {
         afkProvider.removePlayer(event.getPlayer().getUniqueId());
     }
 
-    /**
-     * Internal class for handling the task of checking player movement; Is a separate task so that we can cancel and restart it easily
-     */
     private final class PlayerMovementChecker extends BukkitRunnable {
         private double checksToMake = 0;
         @Override
@@ -113,8 +96,6 @@ public final class AfkListener implements Listener {
                 checksToMake = 0;
                 return;
             }
-
-            // We want every player to get a check every 20 ticks. Therefore we check 1/20th of the players
             for (checksToMake += players.size() / 20D; checksToMake > 0 && !players.isEmpty(); checksToMake--) {
                 AfkPlayer afkPlayer = players.poll();
                 if (afkPlayer.changed()) {
@@ -125,8 +106,6 @@ public final class AfkListener implements Listener {
         }
     }
 
-
-
     private static final class AfkPlayer {
         private final Player player;
         private int locationHash;
@@ -136,11 +115,6 @@ public final class AfkListener implements Listener {
             locationHash = player.getEyeLocation().hashCode();
         }
 
-        /**
-         * Check if the player changed its position since the last check
-         *
-         * @return true if the position changed
-         */
         boolean changed() {
             int previousLocation = locationHash;
             locationHash = player.getEyeLocation().hashCode();

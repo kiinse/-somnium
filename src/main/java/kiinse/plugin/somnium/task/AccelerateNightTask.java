@@ -1,31 +1,30 @@
-package xyz.nkomarn.harbor.task;
+package kiinse.plugin.somnium.task;
 
 import org.bukkit.Statistic;
 import org.bukkit.World;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.jetbrains.annotations.NotNull;
-import xyz.nkomarn.harbor.Harbor;
-import xyz.nkomarn.harbor.util.Config;
+import kiinse.plugin.somnium.Somnium;
+import kiinse.plugin.somnium.util.Config;
 
 public class AccelerateNightTask extends BukkitRunnable {
 
-    private final Harbor harbor;
+    private final Somnium somnium;
     private final Checker checker;
     private final World world;
 
-    public AccelerateNightTask(@NotNull Harbor harbor, @NotNull Checker checker, @NotNull World world) {
-        this.harbor = harbor;
+    public AccelerateNightTask(@NotNull Somnium somnium, @NotNull Checker checker, @NotNull World world) {
+        this.somnium = somnium;
         this.checker = checker;
         this.world = world;
-
-        harbor.getMessages().sendRandomChatMessage(world, "messages.chat.night-skipping");
+        somnium.getMessages().sendRandomChatMessage(world, "messages.chat.night-skipping");
         checker.clearWeather(world);
-        runTaskTimer(harbor, 1, 1);
+        runTaskTimer(somnium, 1, 1);
     }
 
     @Override
     public void run() {
-        Config config = harbor.getConfiguration();
+        Config config = somnium.getConfiguration();
 
         long time = world.getTime();
         double timeRate = config.getInteger("night-skip.time-rate");

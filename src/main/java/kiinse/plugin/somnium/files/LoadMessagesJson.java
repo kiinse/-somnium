@@ -19,10 +19,8 @@ public class LoadMessagesJson {
     public void createFiles() {
         try {
             somnium.getLogger().log(Level.INFO, "Loading messages...");
-            if (FileManager.copyFile(FileManager.accessFile(somnium.getClass(), "messages.json"), FilesPatches.getFile(somnium,"messages", FilesPatches.types.JSON))) {
-                somnium.getLogger().log(Level.INFO, "File 'messages.json' created");
-            }
-            Messages.setSomniumMessages(Json.load(FilesPatches.getPath(somnium,"messages", FilesPatches.types.JSON)));
+            FileManager.copyFile(FileManager.accessFile(somnium.getClass(), "messages.json"), FilesPatches.getFile(somnium,"messages", FilesPatches.types.JSON));
+            Messages.setSomniumMessages(Json.load(FilesPatches.getFile(somnium,"messages", FilesPatches.types.JSON)));
             somnium.getLogger().log(Level.INFO, "Messages loaded!");
         } catch (IOException e) {
             somnium.getLogger().log(Level.WARNING, "Error on loading messages! Info: " + e.getMessage());

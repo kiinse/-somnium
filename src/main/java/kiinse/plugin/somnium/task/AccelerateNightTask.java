@@ -1,11 +1,13 @@
 package kiinse.plugin.somnium.task;
 
+import kiinse.plugin.somnium.files.config.Config;
+import kiinse.plugin.somnium.files.messages.Message;
+import kiinse.plugins.api.darkwaterapi.files.filemanager.YamlFile;
 import org.bukkit.Statistic;
 import org.bukkit.World;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.jetbrains.annotations.NotNull;
 import kiinse.plugin.somnium.Somnium;
-import kiinse.plugin.somnium.util.Config;
 
 public class AccelerateNightTask extends BukkitRunnable {
 
@@ -17,26 +19,25 @@ public class AccelerateNightTask extends BukkitRunnable {
         this.somnium = somnium;
         this.checker = checker;
         this.world = world;
-        somnium.getMessages().sendRandomChatMessage(world, "messages.chat.night-skipping");
+        somnium.getMsg().sendWorldChatMessage(world, Message.ACTIONBAR_NIGHT_SKIPPING);
         checker.clearWeather(world);
         runTaskTimer(somnium, 1, 1);
     }
 
     @Override
     public void run() {
-        Config config = somnium.getConfiguration();
-
+        YamlFile config = somnium.getConfiguration();
         long time = world.getTime();
-        double timeRate = config.getInteger("night-skip.time-rate");
-        int dayTime = Math.max(150, config.getInteger("night-skip.daytime-ticks"));
+        double timeRate = config.getInt(Config.NIGHT_SKIP_TIME_RATE);
+        int dayTime = Math.max(150, config.getInt(Config.NIGHT_SKIP_DAYTIME_TICKS));
         int sleeping = checker.getSleepingPlayers(world).size();
 
-        if (config.getBoolean("night-skip.proportional-acceleration")) {
+        if (config.getBoolean(Config.NIGHT_SKIP_PROPORTIONAL_ACCELERATION)) {
             timeRate = Math.min(timeRate, Math.round(timeRate / world.getPlayers().size() * Math.max(1, sleeping)));
         }
 
         if (time >= (dayTime - timeRate * 1.5) && time <= dayTime) {
-            if (config.getBoolean("night-skip.reset-phantom-statistic")) {
+            if (config.getBoolean(Config.NIGHT_SKIP_CLEAR_PHANTOM_STATISTIC)) {
                 world.getPlayers().forEach(player -> player.setStatistic(Statistic.TIME_SINCE_REST, 0));
             }
 

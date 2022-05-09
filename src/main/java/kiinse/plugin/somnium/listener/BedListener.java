@@ -1,6 +1,8 @@
 package kiinse.plugin.somnium.listener;
 
 import kiinse.plugin.somnium.Somnium;
+import kiinse.plugin.somnium.files.config.Config;
+import kiinse.plugin.somnium.files.messages.Message;
 import kiinse.plugin.somnium.task.Checker;
 import kiinse.plugin.somnium.util.PlayerManager;
 import org.bukkit.Bukkit;
@@ -37,7 +39,7 @@ public class BedListener implements Listener {
 
         Bukkit.getScheduler().runTaskLater(somnium, () -> {
             playerManager.setCooldown(player, Instant.now());
-            somnium.getMessages().sendWorldChatMessage(event.getBed().getWorld(), player, "playerSleeping");
+            somnium.getMsg().sendWorldChatMessage(event.getBed().getWorld(), player, Message.PLAYER_SLEEPING);
         }, 1);
     }
 
@@ -49,7 +51,7 @@ public class BedListener implements Listener {
 
         Bukkit.getScheduler().runTaskLater(somnium, () -> {
             playerManager.setCooldown(event.getPlayer(), Instant.now());
-            somnium.getMessages().sendWorldChatMessage(event.getBed().getWorld(), event.getPlayer(), "playerLeftBed");
+            somnium.getMsg().sendWorldChatMessage(event.getBed().getWorld(), event.getPlayer(), Message.PLAYER_BED_LEFT);
         }, 1);
     }
 
@@ -62,7 +64,7 @@ public class BedListener implements Listener {
             return true;
         }
 
-        int cooldown = somnium.getConfiguration().getInteger("messages.chat.message-cooldown");
+        int cooldown = somnium.getConfiguration().getInt(Config.MESSAGES_CHAT_COOLDOWN);
         return playerManager.getCooldown(player).until(Instant.now(), ChronoUnit.MINUTES) < cooldown;
     }
 }

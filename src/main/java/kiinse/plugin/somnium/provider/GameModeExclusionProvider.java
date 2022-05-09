@@ -2,6 +2,7 @@ package kiinse.plugin.somnium.provider;
 
 import kiinse.plugin.somnium.Somnium;
 import kiinse.plugin.somnium.api.ExclusionProvider;
+import kiinse.plugin.somnium.files.config.Config;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
@@ -14,6 +15,6 @@ public final class GameModeExclusionProvider implements ExclusionProvider {
 
     @Override
     public boolean isExcluded(Player player) {
-        return somnium.getConfig().getBoolean("exclusions.exclude-" + player.getGameMode().toString().toLowerCase(), false);
+        return somnium.getConfiguration().getBoolean(Config.valueOf("EXCLUSIONS_EXCLUDE_" + player.getGameMode().toString().toUpperCase()));
     }
 }

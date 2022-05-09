@@ -22,8 +22,6 @@ commands:
     permission: "somnium.forceskip"
 
 permissions:
-  somnium.reload:
-    default: op
   somnium.forceskip:
     description: "Permits usage of the /forceskip command."
     default: op

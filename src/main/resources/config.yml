@@ -1,61 +1,43 @@
 # Harbor - Sleep mechanics enhancement plugin
 # An open-source project by TechToolbox (@nkomarn)
 
-night-skip:
-  enabled: true # Skip the night if a percentage of the players in a world are sleeping
-  percentage: 50 # Percentage of players required to be sleeping to skip the night (0 - 100)
-  time-rate: 70 # The amount of ticks added to the current time every tick when skipping the night
-  daytime-ticks: 1200 # The time in ticks that Harbor considers day
-  instant-skip: false # Instantly skip the night when the percentage threshold is reached instead of showing the full animation
-  proportional-acceleration: false # Increase the night skipping speed based on the amount of sleeping players
-  clear-rain: true # Clear rain (if it's raining) when the night is skipped
-  clear-thunder: true # Clear thunder (if it's thundering) when the night is skipped
-  reset-phantom-statistic: true # Treats everyone online as if they have slept in the last 3 days after the night is skipped (check out /gamerule doInsomnia on 1.15+)
+night.skip.enabled: true # Skip the night if a percentage of the players in a world are sleeping
+night.skip.percentage: 50 # Percentage of players required to be sleeping to skip the night (0 - 100)
+night.skip.time.rate: 70 # The amount of ticks added to the current time every tick when skipping the night
+night.skip.daytime.ticks: 1200 # The time in ticks that Harbor considers day
+night.skip.instant.skip: false # Instantly skip the night when the percentage threshold is reached instead of showing the full animation
+night.skip.proportional.acceleration: false # Increase the night skipping speed based on the amount of sleeping players
+night.skip.clear.rain: true # Clear rain (if it's raining) when the night is skipped
+night.skip.clear.thunder: true # Clear thunder (if it's thundering) when the night is skipped
+night.skip.reset.phantom.statistic: true # Treats everyone online as if they have slept in the last 3 days after the night is skipped (check out /gamerule doInsomnia on 1.15+)
 
-exclusions:
-  ignored-permission: true # Exclude players with the permission "harbor.ignored" from the sleeping count
-  exclude-survival: false # Exclude players in survival mode from the sleeping count
-  exclude-adventure: false # Exclude players in adventure mode from the sleeping count
-  exclude-creative: false # Exclude players in creative mode from the sleeping count
-  exclude-spectator: true # Exclude players in spectator mode from the sleeping count
-  exclude-vanished: true # Exclude vanished players from the sleeping count
-  exclude-afk: true # Exclude players who are considered afk from the sleeping count
+exclusions.ignored.permission: true # Exclude players with the permission "harbor.ignored" from the sleeping count
+exclusions.exclude.survival: false # Exclude players in survival mode from the sleeping count
+exclusions.exclude.adventure: false # Exclude players in adventure mode from the sleeping count
+exclusions.exclude.creative: false # Exclude players in creative mode from the sleeping count
+exclusions.exclude.spectator: true # Exclude players in spectator mode from the sleeping count
+exclusions.exclude.vanished: true # Exclude vanished players from the sleeping count
+exclusions.exclude.afk: true # Exclude players who are considered afk from the sleeping count
 
 # Detect AFK players and automatically remove them from the required sleeping count
 # Essentials API is used for AFK detection when available- otherwise a fallback system is used
-afk-detection:
-  fallback-enabled: true
-  fallback-timeout: 15 # Time in minutes until a player is considered AFK
+afk.detection.enabled: true
+afk.detection.timeout: 15 # Time in minutes until a player is considered AFK
 
 # Blacklist for worlds- Harbor will ignore these worlds
-blacklisted-worlds:
+blacklisted.worlds:
   - "world_nether"
   - "world_the_end"
-whitelist-mode: false # Will treat the above list as a whitelist instead of a blacklist
+whitelist.mode: false # Will treat the above list as a whitelist instead of a blacklist
 
-messages:
-  chat:
-    enabled: true
-    message-cooldown: 5 # The amount of time in seconds before a player can send another bed enter or leave message
-    night-skipping:
-      - "skipping1"
-      - "skipping2"
-    night-skipped:
-      - "skipped1"
-      - "skipped2"
-      - "skipped3"
-      - "skipped4"
-    #Edit in messages.json
-  actionbar:
-    enabled: false
-  bossbar:
-    enabled: true
-    players-sleeping:
-      message: "{SLEEPING} out of {NEEDED} are sleeping &7&l({MORE} more needed)"
-      color: BLUE
-    night-skipping:
-      message: "Everyone is sleeping. Sweet dreams!"
-      color: GREEN
+messages.chat.enabled: true
+messages.chat.cooldown: 5 # The amount of time in seconds before a player can send another bed enter or leave message
+messages.actionbar.enabled: false
+messages.bossbar.enabled: true
+messages.bossbar.sleeping.message: "{SLEEPING} out of {NEEDED} are sleeping &7&l({MORE} more needed)"
+messages.bossbar.sleeping.color: BLUE
+messages.bossbar.skipping.message: "Everyone is sleeping. Sweet dreams!"
+messages.bossbar.skipping.color: GREEN
 
 # Spooky internal controls
 version: 1.6.4

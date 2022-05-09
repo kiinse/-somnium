@@ -1,35 +1,23 @@
 {
   "prefix": "&b[Somnium]: ",
   "en" : {
-    "pluginReloaded": "&aPlugin has been reloaded",
-    "errorOnReloading":"&cError on plugin reloading. Check logs.",
-    "forceskipAlreadySkipping": "&cThis world's time is already being accelerated.",
-    "forceskipSkipping": "&aForcing night skip in your world.",
-    "playerSleeping": "&e{PLAYER} is now sleeping ({SLEEPING}/{NEEDED}, {MORE} more needed to skip).",
-    "playerLeftBed": "&e{PLAYER} got out of bed ({SLEEPING}/{NEEDED}, {MORE} more needed to skip).",
-    "ActionBarPlayersSleeping": "&e{SLEEPING} out of {NEEDED} players are sleeping ({MORE} more needed to skip)",
-    "ActionBarNightSkipping": "&eEveryone is sleeping- sweet dreams!",
-    "skipping1": "&eAccelerating the night.",
-    "skipping2": "&eRapidly approaching daytime.",
-    "skipped1": "&aThe night has been skipped.",
-    "skipped2": "&aeAhhh, finally morning.",
-    "skipped3": "&aArghh, it's so bright outside.",
-    "skipped4": "&aRise and shine."
+    "forceskip_already": "&cThis world's time is already being accelerated.",
+    "forceskip_skipping": "&aForcing night skip in your world.",
+    "player_sleeping": "&e{PLAYER} is now sleeping ({SLEEPING}/{NEEDED}, {MORE} more needed to skip).",
+    "player_bed_left": "&e{PLAYER} got out of bed ({SLEEPING}/{NEEDED}, {MORE} more needed to skip).",
+    "actionbar_players_sleeping": "&e{SLEEPING} out of {NEEDED} players are sleeping ({MORE} more needed to skip)",
+    "actionbar_night_skipping": "&eEveryone is sleeping- sweet dreams!",
+    "skipping": "&eAccelerating the night.",
+    "skipped": "&aThe night has been skipped."
   },
   "ru" : {
-    "pluginReloaded": "&aПлагин был перезагружен",
-    "errorOnReloading":"&cПроизошла ошибка при перезагрузке плагина. Проверьте логи.",
-    "forceskipAlreadySkipping": "&cУскорение мира уже происходит.",
-    "forceskipSkipping": "&aУскоряем ваш мир...",
-    "playerSleeping": "&e{PLAYER} лёг спать ({SLEEPING}/{NEEDED}, Ещё необходимо {MORE} игроков).",
-    "playerLeftBed": "&e{PLAYER} встал с кровати ({SLEEPING}/{NEEDED}, Ещё необходимо {MORE} игроков).",
-    "ActionBarPlayersSleeping": "&e{SLEEPING} из {NEEDED} игроков спят (Ещё необходимо {MORE} игроков)",
-    "ActionBarNightSkipping": "&eВсе спят. Сладких снов!",
-    "skipping1": "&eУскоряем ночь...",
-    "skipping2": "&eДенб приближается...",
-    "skipped1": "&aНочь была пропущена.",
-    "skipped2": "&aАх, наконец утро.",
-    "skipped3": "&aКак же светло за окном...",
-    "skipped4": "&aВставай и сияй."
+    "forceskip_already": "&cУскорение мира уже происходит.",
+    "forceskip_skipping": "&aУскоряем ваш мир...",
+    "player_sleeping": "&e{PLAYER} лёг спать ({SLEEPING}/{NEEDED}, Ещё необходимо {MORE} игроков).",
+    "player_bed_left": "&e{PLAYER} встал с кровати ({SLEEPING}/{NEEDED}, Ещё необходимо {MORE} игроков).",
+    "actionbar_players_sleeping": "&e{SLEEPING} из {NEEDED} игроков спят (Ещё необходимо {MORE} игроков)",
+    "actionbar_night_skipping": "&eВсе спят. Сладких снов!",
+    "skipping": "&eУскоряем ночь...",
+    "skipped": "&aНочь была пропущена."
   }
 }

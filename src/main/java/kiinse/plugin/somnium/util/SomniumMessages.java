@@ -1,13 +1,16 @@
 package kiinse.plugin.somnium.util;
 
 import com.google.common.base.Enums;
-import kiinse.plugins.api.darkwaterapi.files.locale.LocaleUtils;
-import kiinse.plugins.api.darkwaterapi.utilities.Utils;
-import lombok.Getter;
-import lombok.Setter;
+import kiinse.plugin.somnium.files.config.Config;
+import kiinse.plugin.somnium.files.messages.Message;
+import kiinse.plugins.api.darkwaterapi.files.filemanager.YamlFile;
+import kiinse.plugins.api.darkwaterapi.files.locale.interfaces.PlayerLocale;
+import kiinse.plugins.api.darkwaterapi.files.messages.interfaces.Messages;
+import kiinse.plugins.api.darkwaterapi.utilities.PlayerUtilsImpl;
+import kiinse.plugins.api.darkwaterapi.utilities.UtilsImpl;
+import kiinse.plugins.api.darkwaterapi.utilities.interfaces.PlayerUtils;
+import kiinse.plugins.api.darkwaterapi.utilities.interfaces.Utils;
 import me.clip.placeholderapi.PlaceholderAPI;
-import net.md_5.bungee.api.ChatMessageType;
-import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.boss.BarColor;
@@ -20,29 +23,28 @@ import org.bukkit.event.player.PlayerChangedWorldEvent;
 import org.bukkit.event.world.WorldLoadEvent;
 import org.jetbrains.annotations.NotNull;
 import kiinse.plugin.somnium.Somnium;
-import org.json.JSONObject;
 
 import java.util.*;
 
-public class Messages implements Listener {
+public class SomniumMessages implements Listener {
 
-    @Getter
-    @Setter
-    private static JSONObject somniumMessages;
-
-    private final Utils utils;
     private final Somnium somnium;
-    private final Config config;
-    private final Random random;
+    private final Messages messages;
+    private final Utils utils;
+    private final PlayerLocale locales;
+    private final PlayerUtils playerUtils;
+    private final YamlFile config;
     private final HashMap<UUID, BossBar> bossBars;
     private final boolean papiPresent;
 
-    public Messages(@NotNull Somnium somnium) {
+    public SomniumMessages(@NotNull Somnium somnium) {
         this.somnium = somnium;
+        this.locales = somnium.getDarkWaterAPI().getLocales();
+        this.messages = somnium.getMessages();
+        this.utils = new UtilsImpl();
+        this.playerUtils = new PlayerUtilsImpl();
         this.config = somnium.getConfiguration();
-        this.random = new Random();
         this.bossBars = new HashMap<>();
-        this.utils = new Utils(somnium);
         this.papiPresent = somnium.getServer().getPluginManager().isPluginEnabled("PlaceholderAPI");
 
         for (var world : Bukkit.getWorlds()) {
@@ -53,43 +55,35 @@ public class Messages implements Listener {
         }
     }
 
-    public void sendWorldChatMessage(@NotNull World world, @NotNull String messagePath) {
-        if (!config.getBoolean("messages.chat.enabled")) {
+    public void sendWorldChatMessage(@NotNull World world, @NotNull Message messagePath) {
+        if (!config.getBoolean(Config.MESSAGES_CHAT_ENABLED)) {
             return;
         }
         for (var player : world.getPlayers()) {
-            player.sendMessage(prepareMessage(world, utils.getColorizeMessageWithPrefix(getSomniumMessages(), LocaleUtils.getLocale(player), messagePath)));
+            player.sendMessage(prepareMessage(world, messages.getStringMessageWithPrefix(locales.getPlayerLocale(player), messagePath)));
         }
     }
 
-    public void sendWorldChatMessage(@NotNull World world, @NotNull Player who, @NotNull String messagePath) {
-        if (!config.getBoolean("messages.chat.enabled")) {
+    public void sendWorldChatMessage(@NotNull World world, @NotNull Player who, @NotNull Message messagePath) {
+        if (!config.getBoolean(Config.MESSAGES_CHAT_ENABLED)) {
             return;
         }
         for (var player : world.getPlayers()) {
-            player.sendMessage(prepareMessage(world, prepareMessage(who, utils.getColorizeMessageWithPrefix(getSomniumMessages(), LocaleUtils.getLocale(player), messagePath))));
+            player.sendMessage(prepareMessage(world, prepareMessage(who, messages.getStringMessageWithPrefix(locales.getPlayerLocale(player), messagePath))));
         }
     }
 
-    public void sendActionBarMessage(@NotNull World world, @NotNull String messagePath) {
-        if (!config.getBoolean("messages.actionbar.enabled")) {
+    public void sendActionBarMessage(@NotNull World world, @NotNull Message messagePath) {
+        if (!config.getBoolean(Config.MESSAGES_ACTIONBAR_ENABLED)) {
             return;
         }
         for (var player : world.getPlayers()) {
-            utils.sendActionBar(player, prepareMessage(world, utils.getColorizeMessageWithPrefix(getSomniumMessages(), LocaleUtils.getLocale(player), messagePath)));
+            playerUtils.sendActionBar(player, prepareMessage(world, messages.getStringMessageWithPrefix(locales.getPlayerLocale(player), messagePath)));
         }
-    }
-
-    public void sendRandomChatMessage(@NotNull World world, @NotNull String listLocation) {
-        var messages = config.getStringList(listLocation);
-        if (messages.size() < 1) {
-            return;
-        }
-        sendWorldChatMessage(world, messages.get(random.nextInt(messages.size())));
     }
 
     public void sendBossBarMessage(@NotNull World world, @NotNull String message, @NotNull String color, double percentage) {
-        if (!config.getBoolean("messages.bossbar.enabled")) {
+        if (!config.getBoolean(Config.MESSAGES_BOSSBAR_ENABLED)) {
             return;
         }
 
@@ -104,7 +98,7 @@ public class Messages implements Listener {
             return;
         }
 
-        bar.setTitle(somnium.getMessages().prepareMessage(world, message));
+        bar.setTitle(somnium.getMsg().prepareMessage(world, message));
         bar.setColor(Enums.getIfPresent(BarColor.class, color).or(BarColor.BLUE));
         bar.setProgress(percentage);
         world.getPlayers().forEach(bar::addPlayer);
@@ -125,7 +119,7 @@ public class Messages implements Listener {
     public String prepareMessage(@NotNull Player player, @NotNull String message) {
         var output = utils.replaceWord(message, new String[]{
                 "{PLAYER}:" +  player.getName(),
-                "{DISPLAYNAME}:" + utils.getPlayerName(player),
+                "{DISPLAYNAME}:" + playerUtils.getPlayerName(player),
         });
 
         if (papiPresent) {

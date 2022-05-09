@@ -1,6 +1,8 @@
 package kiinse.plugin.somnium.task;
 
 import kiinse.plugin.somnium.api.ExclusionProvider;
+import kiinse.plugin.somnium.files.config.Config;
+import kiinse.plugin.somnium.files.messages.Message;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.entity.LivingEntity;
@@ -27,11 +29,12 @@ public class Checker extends BukkitRunnable {
         this.somnium = somnium;
         this.skippingWorlds = new HashSet<>();
         this.providers = new HashSet<>();
+        var config = somnium.getConfiguration();
         providers.add(new GameModeExclusionProvider(somnium));
-        providers.add(player -> somnium.getConfig().getBoolean("exclusions.ignored-permission", true) && player.hasPermission("somnium.ignored"));
-        providers.add(player -> somnium.getConfig().getBoolean("exclusions.exclude-vanished", false) && isVanished(player));
-        providers.add(player -> somnium.getConfig().getBoolean("exclusions.exclude-afk", false) && somnium.getPlayerManager().isAfk(player));
-        int interval = somnium.getConfiguration().getInteger("interval");
+        providers.add(player -> config.getBoolean(Config.EXCLUSIONS_IGNORED_PERMISSION) && player.hasPermission("somnium.ignored"));
+        providers.add(player -> config.getBoolean(Config.EXCLUSIONS_EXCLUDE_VANISHED) && isVanished(player));
+        providers.add(player -> config.getBoolean(Config.EXCLUSIONS_EXCLUDE_AFK) && somnium.getPlayerManager().isAfk(player));
+        int interval = somnium.getConfiguration().getInt(Config.INTERVAL);
         if (interval <= 0)
             interval = 1;
         runTaskTimerAsynchronously(somnium, 0L, interval * 20L);
@@ -52,7 +55,7 @@ public class Checker extends BukkitRunnable {
 
     private void checkWorld(@NotNull World world) {
         var config = somnium.getConfiguration();
-        var messages = somnium.getMessages();
+        var messages = somnium.getMsg();
 
         var sleeping = getSleepingPlayers(world).size();
         var needed = getNeeded(world);
@@ -64,21 +67,21 @@ public class Checker extends BukkitRunnable {
 
         if (needed > 0) {
             var sleepingPercentage = Math.min(1, (double) sleeping / getSkipAmount(world));
-            messages.sendActionBarMessage(world, "ActionBarPlayersSleeping");
-            messages.sendBossBarMessage(world, config.getString("messages.bossbar.players-sleeping.message"),
-                    config.getString("messages.bossbar.players-sleeping.color"), sleepingPercentage);
+            messages.sendActionBarMessage(world, Message.ACTIONBAR_PLAYERS_SLEEPING);
+            messages.sendBossBarMessage(world, config.getString(Config.MESSAGES_BOSSBAR_SLEEPING_MESSAGE),
+                    config.getString(Config.MESSAGES_BOSSBAR_SLEEPING_COLOR), sleepingPercentage);
         } else if (needed == 0) {
-            messages.sendActionBarMessage(world, "ActionBarNightSkipping");
-            messages.sendBossBarMessage(world, config.getString("messages.bossbar.night-skipping.message"),
-                    config.getString("messages.bossbar.night-skipping.color"), 1);
+            messages.sendActionBarMessage(world, Message.ACTIONBAR_NIGHT_SKIPPING);
+            messages.sendBossBarMessage(world, config.getString(Config.MESSAGES_BOSSBAR_SKIPPING_MESSAGE),
+                    config.getString(Config.MESSAGES_BOSSBAR_SKIPPING_COLOR), 1);
 
-            if (!config.getBoolean("night-skip.enabled")) {
+            if (!config.getBoolean(Config.NIGHT_SKIP_ENABLED)) {
                 return;
             }
 
-            if (config.getBoolean("night-skip.instant-skip")) {
+            if (config.getBoolean(Config.NIGHT_SKIP_INSTANT_SKIP)) {
                 Bukkit.getScheduler().runTask(somnium, () -> {
-                    world.setTime(config.getInteger("night-skip.daytime-ticks"));
+                    world.setTime(config.getInt(Config.NIGHT_SKIP_DAYTIME_TICKS));
                     clearWeather(world);
                     resetStatus(world);
                 });
@@ -95,8 +98,8 @@ public class Checker extends BukkitRunnable {
     }
 
     public boolean isBlacklisted(@NotNull World world) {
-        var blacklisted = somnium.getConfiguration().getStringList("blacklisted-worlds").contains(world.getName());
-        return somnium.getConfiguration().getBoolean("whitelist-mode") != blacklisted;
+        var blacklisted = somnium.getConfiguration().getStringList(Config.BLACKLISTED_WORLDS).contains(world.getName());
+        return somnium.getConfiguration().getBoolean(Config.WHITELIST_MODE) != blacklisted;
     }
 
     public static boolean isVanished(@NotNull Player player) {
@@ -115,11 +118,11 @@ public class Checker extends BukkitRunnable {
     }
 
     public int getSkipAmount(@NotNull World world) {
-        return (int) Math.ceil(getPlayers(world) * (somnium.getConfiguration().getDouble("night-skip.percentage") / 100));
+        return (int) Math.ceil(getPlayers(world) * (somnium.getConfiguration().getDouble(Config.NIGHT_SKIP_PERCENTAGE) / 100));
     }
 
     public int getNeeded(@NotNull World world) {
-        var percentage = somnium.getConfiguration().getDouble("night-skip.percentage");
+        var percentage = somnium.getConfiguration().getDouble(Config.NIGHT_SKIP_PERCENTAGE);
         return Math.max(0, (int) Math.ceil((getPlayers(world)) * (percentage / 100) - getSleepingPlayers(world).size()));
     }
 
@@ -148,7 +151,7 @@ public class Checker extends BukkitRunnable {
         somnium.getServer().getScheduler().runTaskLater(somnium, () -> {
             skippingWorlds.remove(world.getUID());
             somnium.getPlayerManager().clearCooldowns();
-            somnium.getMessages().sendRandomChatMessage(world, "messages.chat.night-skipped");
+            somnium.getMsg().sendWorldChatMessage(world, Message.SKIPPED);
         }, 20L);
     }
 
@@ -162,11 +165,11 @@ public class Checker extends BukkitRunnable {
         ensureMain(() -> {
             var config = somnium.getConfiguration();
 
-            if (world.hasStorm() && config.getBoolean("night-skip.clear-rain")) {
+            if (world.hasStorm() && config.getBoolean(Config.NIGHT_SKIP_CLEAR_RAIN)) {
                 world.setStorm(false);
             }
 
-            if (world.isThundering() && config.getBoolean("night-skip.clear-thunder")) {
+            if (world.isThundering() && config.getBoolean(Config.NIGHT_SKIP_CLEAR_THUNDER)) {
                 world.setThundering(false);
             }
         });
@@ -178,9 +181,5 @@ public class Checker extends BukkitRunnable {
         } else {
             runnable.run();
         }
-    }
-
-    public void addExclusionProvider(ExclusionProvider provider) {
-        providers.add(provider);
     }
 }

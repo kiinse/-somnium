@@ -6,7 +6,9 @@ import kiinse.plugin.somnium.util.SomniumMessages;
 import kiinse.plugins.api.darkwaterapi.commands.moderncommands.annotation.Command;
 import kiinse.plugins.api.darkwaterapi.commands.moderncommands.interfaces.CommandClass;
 import kiinse.plugins.api.darkwaterapi.files.locale.interfaces.PlayerLocale;
+import kiinse.plugins.api.darkwaterapi.files.messages.SendMessagesImpl;
 import kiinse.plugins.api.darkwaterapi.files.messages.interfaces.Messages;
+import kiinse.plugins.api.darkwaterapi.files.messages.interfaces.SendMessages;
 import kiinse.plugins.api.darkwaterapi.utilities.PlayerUtilsImpl;
 import kiinse.plugins.api.darkwaterapi.utilities.interfaces.PlayerUtils;
 import org.bukkit.command.CommandSender;
@@ -16,14 +18,12 @@ public class ForceSkipCommand implements CommandClass {
 
     private final Somnium somnium;
     private final PlayerUtils playerUtils;
-    private final Messages messages;
-    private final PlayerLocale locales;
+    private final SendMessages sendMessages;
 
     public ForceSkipCommand(@NotNull Somnium somnium) {
         this.playerUtils = new PlayerUtilsImpl();
         this.somnium = somnium;
-        this.messages = somnium.getMessages();
-        this.locales = somnium.getDarkWaterAPI().getLocales();
+        this.sendMessages = new SendMessagesImpl(somnium);
     }
 
     @Override
@@ -32,9 +32,9 @@ public class ForceSkipCommand implements CommandClass {
         var world = playerUtils.getPlayer(sender).getWorld();
         var checker = somnium.getChecker();
         if (checker.isSkipping(world)) {
-            sender.sendMessage(messages.getComponentMessageWithPrefix(locales.getPlayerLocale(sender), Message.FORCESKIP_ALREADY));
+            sendMessages.sendMessageWithPrefix(sender, Message.FORCESKIP_ALREADY);
         } else {
-            sender.sendMessage(messages.getComponentMessageWithPrefix(locales.getPlayerLocale(sender), Message.FORCESKIP_SKIPPING));
+            sendMessages.sendMessageWithPrefix(sender, Message.FORCESKIP_SKIPPING);
             checker.forceSkip(world);
         }
     }

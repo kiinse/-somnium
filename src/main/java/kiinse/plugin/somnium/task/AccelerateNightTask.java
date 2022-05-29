@@ -2,7 +2,6 @@ package kiinse.plugin.somnium.task;
 
 import kiinse.plugin.somnium.files.config.Config;
 import kiinse.plugin.somnium.files.messages.Message;
-import kiinse.plugins.api.darkwaterapi.files.filemanager.YamlFile;
 import org.bukkit.Statistic;
 import org.bukkit.World;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -26,7 +25,7 @@ public class AccelerateNightTask extends BukkitRunnable {
 
     @Override
     public void run() {
-        YamlFile config = somnium.getConfiguration();
+        var config = somnium.getConfiguration();
         long time = world.getTime();
         double timeRate = config.getInt(Config.NIGHT_SKIP_TIME_RATE);
         int dayTime = Math.max(150, config.getInt(Config.NIGHT_SKIP_DAYTIME_TICKS));

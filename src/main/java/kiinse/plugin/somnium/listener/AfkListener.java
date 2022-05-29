@@ -29,7 +29,7 @@ public final class AfkListener implements Listener {
     public AfkListener(@NotNull DefaultAFKProvider afkProvider) {
         this.afkProvider = afkProvider;
         this.somnium = afkProvider.getSomnium();
-        somnium.getLogger().info("Initializing fallback AFK detection system. Fallback AFK system is not enabled at this time");
+        somnium.sendLog("Initializing fallback AFK detection system. Fallback AFK system is not enabled at this time");
         status = false;
     }
 
@@ -41,9 +41,9 @@ public final class AfkListener implements Listener {
             players.addAll(Bukkit.getOnlinePlayers().stream().map((Function<Player, AfkPlayer>) AfkPlayer::new).collect(Collectors.toSet()));
             Bukkit.getServer().getPluginManager().registerEvents(this, somnium);
             movementChecker.runTaskTimer(somnium, 0, 1);
-            somnium.getLogger().info("Fallback AFK detection system is enabled");
+            somnium.sendLog("Fallback AFK detection system is enabled");
         } else {
-            somnium.getLogger().info("Fallback AFK detection system was already enabled");
+            somnium.sendLog("Fallback AFK detection system was already enabled");
         }
     }
 
@@ -53,9 +53,9 @@ public final class AfkListener implements Listener {
             movementChecker.cancel();
             HandlerList.unregisterAll(this);
             players = null;
-            somnium.getLogger().info("Fallback AFK detection system is disabled");
+            somnium.sendLog("Fallback AFK detection system is disabled");
         } else {
-            somnium.getLogger().info("Fallback AFK detection system was already disabled");
+            somnium.sendLog("Fallback AFK detection system was already disabled");
         }
     }
 
